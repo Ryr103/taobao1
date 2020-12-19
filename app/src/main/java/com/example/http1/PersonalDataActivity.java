@@ -7,12 +7,15 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,7 +49,7 @@ public class PersonalDataActivity extends AppCompatActivity {
     private EditText User_Name;
     private EditText Sex;
     private EditText Info;
-    private RoundedImageView Head;
+    private ImageView Head;
     private Uri imageUri;//图片存储的路径
     private File file;//需要存储的图片文件
 
@@ -64,6 +67,11 @@ public class PersonalDataActivity extends AppCompatActivity {
         file = new File(Environment.getExternalStorageDirectory(), "headPicture.jpg");//新建一个文件（路径，文件名称）
         //Environment.getExternalStorageDirectory()为获取sd的根目录。（双sd卡获取外置sd卡，没有外置sd卡，则获取内部sd卡）
         imageUri = Uri.fromFile(file);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+            StrictMode.setVmPolicy(builder.build());
+        }
 
 
         Back.setOnClickListener(new View.OnClickListener() {
@@ -239,13 +247,13 @@ public class PersonalDataActivity extends AppCompatActivity {
                 switch (resultCode) {
                     case RESULT_OK:
                         if (data != null) {
-                            Uri uri = data.getData();
+                            final Uri uri = data.getData();
                             Head.setImageURI(uri);
                             String[] arr = {MediaStore.Images.Media.DATA};
                             Cursor cursor = managedQuery(uri, arr, null, null, null);
                             int imgIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
                             cursor.moveToFirst();
-                            String imgPath = cursor.getString(imgIndex);
+                            final String imgPath = cursor.getString(imgIndex);
                             final File file = new File(imgPath);
                             if(!file.exists()){
                                 Toast.makeText(this,"无文件",Toast.LENGTH_SHORT).show();
@@ -258,19 +266,31 @@ public class PersonalDataActivity extends AppCompatActivity {
                                     String url = "http://49.232.214.94/api/upload/head";
                                     SharedPreferences sharedPreferences = getSharedPreferences("token", Context.MODE_PRIVATE);
                                     String token = sharedPreferences.getString("token",null);
-                                    RequestBody requestBody = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+                                    OkHttpClient client = new OkHttpClient();
+                                    RequestBody requestBody = RequestBody.create(MediaType.parse("multipart/form-data"),file);
                                     MultipartBody multipartBody = new MultipartBody.Builder()
                                             .setType(MultipartBody.FORM)
-                                            .addFormDataPart("img", file.getName(), requestBody)
+                                            .addFormDataPart("img",file.getName(),requestBody)
                                             .build();
                                     Request request = new Request.Builder()
                                             .url(url)
-                                            .addHeader("Authorization",token)
                                             .addHeader("Accept","application/json")
+                                            .addHeader("Authorization",token)
                                             .post(multipartBody)
                                             .build();
-                                    OkHttpClient client = new OkHttpClient();
-
+                                   /* OkHttpClient client = new OkHttpClient().newBuilder()
+                                            .build();
+                                    RequestBody body = new MultipartBody.Builder().setType(MultipartBody.FORM)
+                                            .addFormDataPart("img", imgPath,
+                                                    RequestBody.create(MediaType.parse("application/octet-stream"),
+                                                            new File(imgPath)))
+                                            .build();
+                                    Request request = new Request.Builder()
+                                            .url("http://49.232.214.94/api/upload/head")
+                                            .method("POST", body)
+                                            .addHeader("Accept", "application/json")
+                                            .addHeader("Authorization", token)
+                                            .build();*/
                                     client.newCall(request).enqueue(new Callback() {
                                         @Override
                                         public void onFailure(@NotNull Call call, @NotNull IOException e) {

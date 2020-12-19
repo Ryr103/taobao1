@@ -44,13 +44,10 @@
         android:layout_height="160dp"
         android:layout_marginTop="20dp"
         android:gravity="center">
-        <com.makeramen.roundedimageview.RoundedImageView
+        <ImageView
             android:layout_width="135dp"
             android:layout_height="135dp"
-            app:riv_oval="true"
             android:src="@mipmap/me"
-            app:riv_border_color="#9D9D9D"
-            app:riv_border_width="2dp"
             android:layout_marginTop="5dp"
             android:id="@+id/avatar"/>
 

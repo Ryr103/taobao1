@@ -71,7 +71,15 @@ public class BuyAGoodActivity extends AppCompatActivity {
         Info.setText(info);
         Price.setText("¥"+price.toString());
         Quantity.setText("剩"+quantity.toString()+"件");
-        Glide.with(this).load(img).into(Img);
+        if(!img.equals("")){
+            String i = img.substring(0,4);
+            if (i.equals("http")){
+                Glide.with(this).load(img).into(Img);
+            }else{
+                Glide.with(this).load("http://49.232.214.94/api/img/"+img).into(Img);
+            }
+        }
+
         Back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

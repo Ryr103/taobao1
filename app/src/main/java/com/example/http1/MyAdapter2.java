@@ -60,7 +60,7 @@ public class MyAdapter2 extends RecyclerView.Adapter<MyAdapter2.ViewHolder>{
 
             }
         });
-        Glide.with(context).load(list.get(position).get("img").toString()).into(holder.Img);
+        Glide.with(context).load("http://49.232.214.94/api/img/"+list.get(position).get("img").toString()).into(holder.Img);
     }
 
     @Override

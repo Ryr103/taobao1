@@ -64,7 +64,16 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>{
 
             }
         });
-        Glide.with(context).load(list.get(position).get("img").toString()).into(holder.Img);
+        if(!list.get(position).get("img").toString().equals("")){
+            String i = list.get(position).get("img").toString().substring(0,4);
+            if (i.equals("http")){
+                Glide.with(context).load(list.get(position).get("img").toString()).into(holder.Img);
+            }else{
+                Glide.with(context).load("http://49.232.214.94/api/img/"+list.get(position).get("img").toString()).into(holder.Img);
+            }
+        }
+        /*Glide.with(context).load("http://49.232.214.94/api/img/"+list.get(position).get("img").toString()).into(holder.Img);*/
+
     }
 
     @Override

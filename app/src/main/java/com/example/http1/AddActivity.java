@@ -41,6 +41,7 @@ public class AddActivity extends AppCompatActivity {
     private EditText itemInfo;
     private EditText itemQuantity;
     private ImageView Avatar;
+    private String hash;
 
     @Override
     protected void onCreate (Bundle savedInstanceState) {
@@ -94,7 +95,7 @@ public class AddActivity extends AppCompatActivity {
                             jsonObject.put("price", item_Price);
                             jsonObject.put("info",item_Information);
                             jsonObject.put("quantity",item_Quantity);
-                            jsonObject.put("img",img);
+                            jsonObject.put("img",hash);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -177,7 +178,7 @@ public class AddActivity extends AppCompatActivity {
                             Thread thread = new Thread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    String url = "http://49.232.214.94/api/upload/head";
+                                    String url = "http://49.232.214.94/api/upload/good";
                                     SharedPreferences sharedPreferences = getSharedPreferences("token", Context.MODE_PRIVATE);
                                     String token = sharedPreferences.getString("token",null);
                                     RequestBody requestBody = RequestBody.create(MediaType.parse("multipart/form-data"), file);
@@ -210,16 +211,19 @@ public class AddActivity extends AppCompatActivity {
                                             try {
                                                 JSONObject jsonObject = new JSONObject(responseData);
                                                 final String msg = jsonObject.getString("msg");
-                                                final String code = jsonObject.getString("code");
+                                                JSONObject jsonobject = jsonObject.getJSONObject("data");
+                                                hash  = jsonobject.getString("hash");
                                                 runOnUiThread(new Runnable() {
                                                     @Override
                                                     public void run() {
-                                                        Toast.makeText(AddActivity.this, code+msg, Toast.LENGTH_SHORT).show();
+                                                        Toast.makeText(AddActivity.this, msg, Toast.LENGTH_SHORT).show();
                                                     }
                                                 });
-                                                finish();
+
                                             } catch (JSONException e) {
+                                                Toast.makeText(AddActivity.this,"上传失败",Toast.LENGTH_SHORT).show();
                                                 e.printStackTrace();
+                                                finish();
                                             }
 
 

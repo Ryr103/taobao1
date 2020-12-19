@@ -55,11 +55,21 @@
                         android:layout_height="30dp"
                         android:text="user_id"
                         android:textSize="20dp"
-                        android:layout_marginTop="30dp"
+                        android:layout_marginTop="20dp"
                         android:layout_marginLeft="7dp"
                         android:textColor="#272727"
                         android:layout_gravity="center"
                         android:id="@+id/User_id"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:text="user_id"
+                        android:textSize="15dp"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginLeft="7dp"
+                        android:textColor="#6C6C6C"
+                        android:layout_gravity="center"
+                        android:id="@+id/User_info"/>
 
 
 

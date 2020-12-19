@@ -41,6 +41,7 @@ public class ThirdFragment extends Fragment {
     private TextView Use_ID;
     private RoundedImageView Head;
     private LinearLayout MyGoods;
+    private TextView Info;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.fragment_3,container,false);
@@ -49,6 +50,7 @@ public class ThirdFragment extends Fragment {
         Use_ID = view.findViewById(R.id.User_id);
         Head = view.findViewById(R.id.head);
         MyGoods = view.findViewById(R.id.my_goods);
+        Info = view.findViewById(R.id.User_info);
         Sign_in.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -119,10 +121,12 @@ public class ThirdFragment extends Fragment {
                             JSONObject jsonObject2 = jsonObject1.getJSONObject("user");
                             final String name = jsonObject2.getString("name");
                             final String head = jsonObject2.getString("head");
+                            final String info = jsonObject2.getString("info");
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     Use_ID.setText(name);
+                                    Info.setText(info);
                                     Glide.with(getActivity()).load("http://49.232.214.94/api/img/"+head).into(Head);
                                 }
                             });
